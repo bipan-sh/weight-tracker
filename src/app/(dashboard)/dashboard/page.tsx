@@ -22,8 +22,19 @@ interface PartnerWeightData {
 interface CombinedWeightData {
   date: string;
   userWeight?: number;
-  [key: string]: number | string | undefined;
+  [key: string]: string | number | undefined;  // Allow dynamic partner weight keys
 }
+
+const partnerColors = [
+  '#10B981', // emerald-500
+  '#F59E0B', // amber-500
+  '#EF4444', // red-500
+  '#8B5CF6', // violet-500
+  '#EC4899', // pink-500
+  '#06B6D4', // cyan-500
+  '#F97316', // orange-500
+  '#84CC16', // lime-500
+];
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
@@ -88,6 +99,13 @@ export default function Dashboard() {
 
         const goalsData = await goalsResponse.json();
         const partnerWeightsData = partnerWeightsResponse.ok ? await partnerWeightsResponse.json() : { partnerWeights: [] };
+        const typedPartnerWeights = partnerWeightsData.partnerWeights as PartnerWeightData[];
+
+        console.log('Partner Weights Data:', {
+          raw: partnerWeightsData,
+          typed: typedPartnerWeights,
+          length: typedPartnerWeights.length
+        });
 
         // Helper function to normalize date to midnight UTC
         const normalizeDate = (dateStr: string) => {
@@ -116,19 +134,24 @@ export default function Dashboard() {
         });
 
         // Add partner weights to the map, merging with existing dates
-        partnerWeightsData.partnerWeights.forEach((partner: PartnerWeightData) => {
+        typedPartnerWeights.forEach((partner: PartnerWeightData) => {
+          console.log('Processing partner:', {
+            id: partner.partnerId,
+            name: partner.partnerName,
+            weightsCount: partner.weights.length
+          });
+          
           partner.weights
             .filter((w: WeightData): w is WeightData => typeof w.date === 'string') // Type guard to ensure date is string
             .sort((a: WeightData, b: WeightData) => new Date(a.date).getTime() - new Date(b.date).getTime())
             .forEach((w: WeightData) => {
               const normalizedDate = normalizeDate(w.date);
-              const existingData = dateMap.get(normalizedDate);
-              const updatedData: CombinedWeightData = {
-                date: normalizedDate,
-                userWeight: existingData?.userWeight,
-                [partner.partnerId]: w.value
-              };
-              dateMap.set(normalizedDate, updatedData);
+              if (typeof normalizedDate !== 'string') return; // Skip if date is not a string
+              
+              // If an entry exists for this date, update it; otherwise, create a new entry
+              const existingData = (dateMap.get(normalizedDate) || { date: normalizedDate }) as CombinedWeightData;
+              existingData[partner.partnerId] = w.value;
+              dateMap.set(normalizedDate, existingData);
             });
         });
 
@@ -136,10 +159,15 @@ export default function Dashboard() {
         const mergedData = Array.from(dateMap.values())
           .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
+        console.log('Merged Data:', {
+          length: mergedData.length,
+          sample: mergedData.slice(0, 2)
+        });
+
         // Calculate Y-axis domain based on all weights
         const allWeights = [
           ...weightsData.map((w: WeightData) => w.value),
-          ...partnerWeightsData.partnerWeights.flatMap((p: PartnerWeightData) => 
+          ...typedPartnerWeights.flatMap((p: PartnerWeightData) => 
             p.weights.map((w: WeightData) => w.value)
           )
         ];
@@ -155,7 +183,7 @@ export default function Dashboard() {
         }
 
         setWeights(weightsData);
-        setPartnerWeights(partnerWeightsData.partnerWeights);
+        setPartnerWeights(typedPartnerWeights);
         setCombinedData(mergedData);
 
         // Check if this is the user's first login
@@ -257,7 +285,7 @@ export default function Dashboard() {
       {weights.length > 0 && (
         <div className="bg-white p-4 rounded-md shadow">
           <h2 className="text-lg font-semibold mb-4 text-gray-900">Weight Progress</h2>
-          <div className="h-64">
+          <div className="h-96">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart 
                 data={combinedData}
@@ -297,15 +325,15 @@ export default function Dashboard() {
                   activeDot={{ r: 6 }}
                   connectNulls
                 />
-                {partnerWeights.map((partner) => (
+                {partnerWeights.map((partner, index) => (
                   <Line
                     key={partner.partnerId}
                     type="monotone"
                     dataKey={partner.partnerId}
-                    stroke="#10B981"
+                    stroke={partnerColors[index % partnerColors.length]}
                     name={partner.partnerId}
                     strokeWidth={2}
-                    dot={{ fill: '#10B981', r: 4 }}
+                    dot={{ fill: partnerColors[index % partnerColors.length], r: 4 }}
                     activeDot={{ r: 6 }}
                     connectNulls
                   />
@@ -318,9 +346,12 @@ export default function Dashboard() {
               <div className="w-3 h-3 rounded-full bg-indigo-600 mr-2"></div>
               <span className="text-sm text-gray-600">Your Weight</span>
             </div>
-            {partnerWeights.map((partner) => (
+            {partnerWeights.map((partner, index) => (
               <div key={partner.partnerId} className="flex items-center">
-                <div className="w-3 h-3 rounded-full bg-emerald-500 mr-2"></div>
+                <div 
+                  className="w-3 h-3 rounded-full mr-2" 
+                  style={{ backgroundColor: partnerColors[index % partnerColors.length] }}
+                ></div>
                 <span className="text-sm text-gray-600">{partner.partnerName}'s Weight</span>
               </div>
             ))}
