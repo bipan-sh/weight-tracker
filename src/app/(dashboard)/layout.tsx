@@ -123,7 +123,7 @@ export default function DashboardLayout({
                         <Menu.Item>
                           {({ active }) => (
                             <button
-                              onClick={() => signOut()}
+                              onClick={() => signOut({ callbackUrl: '/' })}
                               className={classNames(
                                 active ? 'bg-gray-100' : '',
                                 'block w-full text-left px-4 py-2 text-sm text-gray-700'
@@ -211,7 +211,7 @@ export default function DashboardLayout({
                   </Disclosure.Button>
                   <Disclosure.Button
                     as="button"
-                    onClick={() => signOut()}
+                    onClick={() => signOut({ callbackUrl: '/' })}
                     className="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
                   >
                     Sign out
