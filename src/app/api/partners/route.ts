@@ -73,15 +73,15 @@ export async function GET() {
     console.log('Found pending requests:', pendingRequests.length);
 
     // Transform partnerships data
-    const transformedPartners = partnerships.map((p: Partnership) => {
+    const transformedPartners = partnerships.map((p) => {
       const isUserTheRequester = p.userId === session.user.id;
       const partnerInfo = isUserTheRequester ? p.partner : p.user;
       
       return {
         id: p.id,
         partnerId: partnerInfo.id,
-        name: partnerInfo.name,
-        email: partnerInfo.email,
+        name: partnerInfo.name ?? 'Unknown',
+        email: partnerInfo.email ?? 'No email',
       };
     });
 

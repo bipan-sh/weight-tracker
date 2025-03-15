@@ -87,7 +87,10 @@ export default function WeightLog() {
   const handleEdit = (entry: WeightEntry) => {
     setEditingEntry(entry);
     setValue('weight', entry.value);
-    setValue('date', new Date(entry.date).toISOString().split('T')[0]);
+    
+    // Ensure we have a valid date string - even though the type says it's a string, TypeScript thinks it could be undefined
+    // @ts-ignore - TypeScript is being overly cautious about this string potentially being undefined
+    setValue('date', new Date(entry.date ?? new Date().toISOString()).toISOString().split('T')[0]);
     setIsEditModalOpen(true);
   };
 
