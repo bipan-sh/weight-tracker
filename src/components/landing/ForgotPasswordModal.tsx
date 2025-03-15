@@ -111,7 +111,7 @@ export default function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordM
                     {...register('email')}
                     type="email"
                     id="email"
-                    className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-colors"
+                    className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-colors text-gray-900"
                     placeholder="Enter your email"
                   />
                   {errors.email && (

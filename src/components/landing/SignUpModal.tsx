@@ -131,7 +131,7 @@ export default function SignUpModal({ isOpen, onClose, onSignInClick }: SignUpMo
                     {...register('name')}
                     type="text"
                     id="name"
-                    className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-colors"
+                    className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-colors text-gray-900"
                     placeholder="Enter your name"
                   />
                   {errors.name && (
@@ -147,7 +147,7 @@ export default function SignUpModal({ isOpen, onClose, onSignInClick }: SignUpMo
                     {...register('email')}
                     type="email"
                     id="email"
-                    className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-colors"
+                    className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-colors text-gray-900"
                     placeholder="Enter your email"
                   />
                   {errors.email && (
@@ -163,7 +163,7 @@ export default function SignUpModal({ isOpen, onClose, onSignInClick }: SignUpMo
                     {...register('password')}
                     type="password"
                     id="password"
-                    className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-colors"
+                    className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-colors text-gray-900"
                     placeholder="Create a password"
                   />
                   {errors.password && (
@@ -179,7 +179,7 @@ export default function SignUpModal({ isOpen, onClose, onSignInClick }: SignUpMo
                     {...register('confirmPassword')}
                     type="password"
                     id="confirmPassword"
-                    className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-colors"
+                    className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-colors text-gray-900"
                     placeholder="Confirm your password"
                   />
                   {errors.confirmPassword && (

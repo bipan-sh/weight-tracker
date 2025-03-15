@@ -113,7 +113,7 @@ export default function SignInModal({ isOpen, onClose, onSignUpClick, onForgotPa
                     {...register('email')}
                     type="email"
                     id="email"
-                    className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-colors"
+                    className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-colors text-gray-900"
                     placeholder="Enter your email"
                   />
                   {errors.email && (
@@ -129,7 +129,7 @@ export default function SignInModal({ isOpen, onClose, onSignUpClick, onForgotPa
                     {...register('password')}
                     type="password"
                     id="password"
-                    className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-colors"
+                    className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition-colors text-gray-900"
                     placeholder="Enter your password"
                   />
                   {errors.password && (
