@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -28,6 +28,12 @@ interface SignInModalProps {
 export default function SignInModal({ isOpen, onClose, onSignUpClick, onForgotPasswordClick }: SignInModalProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    return () => setIsMounted(false);
+  }, []);
 
   const {
     register,
@@ -62,7 +68,7 @@ export default function SignInModal({ isOpen, onClose, onSignUpClick, onForgotPa
     }
   };
 
-  return createPortal(
+  const modalContent = (
     <AnimatePresence>
       {isOpen && (
         <>
@@ -182,7 +188,11 @@ export default function SignInModal({ isOpen, onClose, onSignUpClick, onForgotPa
           </div>
         </>
       )}
-    </AnimatePresence>,
-    document.body
+    </AnimatePresence>
   );
+
+  // Only create portal on the client-side
+  if (!isMounted) return null;
+  
+  return createPortal(modalContent, document.body);
 } 
